@@ -16,9 +16,9 @@ The program launches two threads executing repetitive tasks until a shared stop 
 
 ### Identified issues and solutions
 1. Dangling Reference (critical bug): the ```Process``` function was passed by reference while being a temporary object, leading to undefined behavior. To fix it, the ```Process``` function must be passed to the ```StartThread``` by value instead of by reference.
-2. Timeout Semantics: the timeout measures total runtime instead of per-loop duration. This may be intentional, in this case there is no problem.
-3. Shared flag: the shared ```running``` flag between threads may be also intentional. But if the purpose is to finish both tasks independently, having a shared flag is not a good idea.
-4. Lambda Capture: the lambda capture ```[&]``` may cause some problems, since it captures all variables in the function by reference. It is better to use ```[&running, Process, timeout]```, so the lambda capture explicitly captures only the required variables: ```running``` by reference to allow shared termination between threads, and ```Process``` and ```timeout``` by value to avoid dangling references and ensure thread safety.
+2. Timeout Semantics: the timeout measures total runtime instead of per-loop duration. This may be intentional, but the naming could be misleading and should be clarified.
+3. Shared flag: the shared ```running``` flag between threads may be also intentional. If independent execution is desired, a shared flag introduces unnecessary coupling and may not be appropriate.
+4. Lambda Capture: using ```[&]``` may unintentionally capture variables by reference, which is unsafe in concurrent contexts. It is better to use ```[&running, Process, timeout]```, so the lambda capture explicitly captures only the required variables: ```running``` by reference to allow shared termination between threads, and ```Process``` and ```timeout``` by value to avoid dangling references and ensure thread safety.
 
 ## Python Task – Matrix Rotation
 The goal is to rotate a matrix 90° clockwise in-place.
@@ -35,7 +35,7 @@ The correct approach consists of two steps: transpose the matrix and then revers
 Design a technical approach to detect, track (in 3D), and capture a UAV using a robotic arm and a gripper with a monocular camera.
 
 ### Proposed Approach
-In order to face this task, the next 2 steps are proposed:
+A possible approach consists of the following steps:
 1. **2D Detection**: use a deep learning-based object detector (e.g. YOLO) to detect the UAV in the image. The output will be the bounding box in pixel coordinates. The limitation of this approach is that we have no depth information.
 2. **3D Tracking**: since a single camera does not provide direct depth, additional methods are required. For example: Monocular Pose Estimation (PnP) assuming known UAV geometry, Visual Servoing (IBVS/PBVS) to control the robot directly using image-space error, or temporal filtering such as Kalman filter to stabilize estimation over time.
 
