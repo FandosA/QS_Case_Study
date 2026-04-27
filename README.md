@@ -15,10 +15,4 @@ The program launches two threads executing repetitive tasks until a shared stop 
 ```Thread 1``` executes every 2 seconds and increments a counter. ```Thread 2``` executes every 1 second and stops after 5 iterations. Since both threads share the running flag, when one stops, the other stops as well. So, ```Thread 2``` will finish after ~5 seconds (5 iterations) and then ```Thread 1``` will stop too, having performed ~2–3 iterations in that time.
 
 ### Issues Identified
-1. Dangling Reference (Critical Bug)
-
-The Process function was passed by reference while being a temporary object, leading to undefined behavior.
-
-Fix:
-
-Pass Process by value instead of by reference.
+1. Dangling Reference (Critical Bug): the Process function was passed by reference while being a temporary object, leading to undefined behavior. To fix it, the ```Process```function must be passed by value instead of by reference.
