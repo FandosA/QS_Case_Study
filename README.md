@@ -1,5 +1,5 @@
 # Technical Case Study – Robotics & Computer Vision
-##Overview
+## Overview
 
 This repository contains solutions and analysis for a technical case study focused on:
 1. Multithreading in C++
