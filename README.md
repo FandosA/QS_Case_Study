@@ -12,11 +12,13 @@ The program launches two threads executing repetitive tasks until a shared stop 
 ```StartThread``` is a wrapper that runs a function (```Process```) in a loop. Execution stops when ```Process()``` returns ```true``` or a timeout is reached. A shared atomic flag (```running```) controls termination of both threads.
 
 ### Behaviour
-Thread 1: executes every 2 seconds and increments a counter.
-Thread 2: executes every 1 second and stops after 5 iterations.
-Since both threads share the running flag, when one stops, the other stops as well.
+```Thread 1``` executes every 2 seconds and increments a counter. ```Thread 2``` executes every 1 second and stops after 5 iterations. Since both threads share the running flag, when one stops, the other stops as well. So, ```Thread 2``` will finish after ~5 seconds (5 iterations) and then ```Thread 1``` will stop too, having performed ~2–3 iterations in that time.
 
-Expected behavior:
+### Issues Identified
+1. Dangling Reference (Critical Bug)
 
-Thread 2 finishes after ~5 seconds.
-Thread 1 performs ~2–3 iterations in that time.
+The Process function was passed by reference while being a temporary object, leading to undefined behavior.
+
+Fix:
+
+Pass Process by value instead of by reference.
