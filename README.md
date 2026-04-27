@@ -28,3 +28,38 @@ The original implementation overwrites matrix values while still using them as i
 
 ### Solution
 The correct approach consists of two steps: transpose the matrix and then reverse each row. This preserves data integrity and performs the rotation correctly in-place.
+
+## Case Study – Catching a UAV
+
+### Goal
+Design a technical approach to detect, track (in 3D), and capture a UAV using a robotic arm and a gripper with a monocular camera.
+
+### Proposed Approach
+In order to face this task, the next 2 steps are proposed:
+1. **2D Detection**: use a deep learning-based object detector (e.g. YOLO) to detect the UAV in the image. The output will be the bounding box in pixel coordinates. The limitation of this approach is that we have no depth information.
+2. **3D Tracking**: since a single camera does not provide direct depth, additional methods are required. For example: Monocular Pose Estimation (PnP) assuming known UAV geometry, Visual Servoing (IBVS/PBVS) to control the robot directly using image-space error, or temporal filtering such as Kalman filter to stabilize estimation over time.
+
+### Challenges of Using a Single Camera
+- No direct depth measurement
+- Scale ambiguity
+- Sensitivity to occlusions
+- Motion blur in dynamic scenarios
+
+### Mitigation Strategies
+- Use known object dimensions
+- Apply temporal filtering (e.g. Kalman filter)
+- Use visual servoing instead of full 3D reconstruction
+- Leverage motion of the robot for multi-view perception
+
+### Alternative Sensor Approaches
+To improve robustness and simplify 3D estimation:
+- Stereo cameras → direct depth estimation
+- RGB-D sensors → dense depth information
+- LiDAR → robust distance measurement
+- Sensor fusion → combining multiple modalities for improved accuracy
+
+## Conclusion
+This case study highlights key challenges in:
+- Safe multithreading design
+- In-place data transformations
+- Real-world robotic perception under sensor constraints
